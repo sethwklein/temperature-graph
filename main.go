@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	stathat "github.com/stathat/go"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -79,13 +81,45 @@ func (list *TickList) Print() {
 }
 
 func errMain() (err error) {
+	verbose := true
+	email := ""
 	id := "1348"
+	name := "KBGR"
+	interval := 60
+	interval = 60 * 3
+
+	prev := time.Now().Add(time.Minute * -time.Duration(interval))
 
 	list, err := NewTickList(id)
 	if err != nil {
 		return err
 	}
-	list.Print()
+
+	if list.Len() < 1 {
+		// BUG(sk): likely there's useful data in the json on error
+		return errors.New("no weather data returned")
+	}
+
+	recent := list.Tick(list.Len() - 1)
+	if recent.Date.Before(prev) {
+		if verbose {
+			fmt.Println("already reported latest data")
+		}
+		return nil
+	}
+
+	name = "weather-temp" + name
+	if verbose {
+		fmt.Println(name, email, recent.Fahr)
+	}
+	// the return value is a farce
+	_ = stathat.PostEZValue(name, email, recent.Fahr)
+	// if you make anything print in here, convert the whole thing to use
+	// log instead of fmt.
+	finished := stathat.WaitUntilFinished(time.Second * 5)
+	if !finished {
+		return errors.New("stathat timed out")
+	}
 
 	return nil
 }
