@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	stathat "github.com/stathat/go"
 	"io/ioutil"
@@ -80,15 +81,42 @@ func (list *TickList) Print() {
 	}
 }
 
-func errMain() (err error) {
-	verbose := true
-	email := ""
-	id := "1348"
-	name := "KBGR"
-	interval := 60
-	interval = 60 * 3
+type UsageError struct {
+	error
+}
 
-	prev := time.Now().Add(time.Minute * -time.Duration(interval))
+func errMain() (err error) {
+	help := false
+	flag.BoolVar(&help, "help", false, "print this help message")
+	verbose := false
+	flag.BoolVar(&verbose, "verbose", false, "print actions to stdout")
+	email := ""
+	flag.StringVar(&email, "email", "",
+		"email address registered with StatHat")
+	id := ""
+	flag.StringVar(&id, "station", "", "station id. ex: 1348")
+	name := ""
+	flag.StringVar(&name, "stat", "",
+		`stat name. defaults to "weather-" + station. ex: weather-temp-KBGR`)
+	interval := time.Minute * 10
+	flag.DurationVar(&interval, "interval", time.Minute*10,
+		"time since last run")
+	flag.Parse()
+	if help {
+		flag.Usage()
+		return nil
+	}
+	if email == "" {
+		return UsageError{errors.New("email required")}
+	}
+	if id == "" {
+		return UsageError{errors.New("station id required")}
+	}
+	if name == "" {
+		name = "weather-" + id
+	}
+
+	prev := time.Now().Add(-interval)
 
 	list, err := NewTickList(id)
 	if err != nil {
@@ -128,6 +156,9 @@ func main() {
 	err := errMain()
 	if err == nil {
 		os.Exit(0)
+	}
+	if _, ok := err.(UsageError); ok {
+		flag.Usage()
 	}
 	fmt.Fprintf(os.Stderr, "%v: Error: %v\n", filepath.Base(os.Args[0]), err)
 	os.Exit(1)
