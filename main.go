@@ -18,7 +18,9 @@ func KelvinToFahr(kelvin float64) float64 {
 }
 
 type TickList struct {
-	List []*Tick
+	Message string
+	Code    string `json:"cod"`
+	List    []*Tick
 }
 
 type Tick struct {
@@ -124,8 +126,8 @@ func errMain() (err error) {
 	}
 
 	if list.Len() < 1 {
-		// BUG(sk): likely there's useful data in the json on error
-		return errors.New("no weather data returned")
+		return fmt.Errorf("no weather data returned: %v: %v", list.Code,
+			list.Message)
 	}
 
 	recent := list.Tick(list.Len() - 1)
