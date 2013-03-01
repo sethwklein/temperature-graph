@@ -9,6 +9,12 @@ that graph.
 [1] OWM: http://openweathermap.org/
 [2] StatHat: http://www.stathat.com/
 
+Source
+
+http://github.com/sethwklein/temperature-graph
+
+go get github.com/sethwklein/temperature-graph
+
 Usage
 
 Obviously, sign up with StatHat :)
@@ -17,10 +23,13 @@ Go to http://openweathermap.org/wiki/API/JSON_API and figure out how to find
 the OWM ID (and maybe name) for the station you're interested in. Future
 versions may automate this.
 
-Then run from cron or such something like:
+Then run it from cron or such with something like:
 
 4,14,24,34,44,54 * * * * "$GOPATH"/bin/temperature-graph -email "your@email" -station 1348 -stat weather-KBGR
 
+Where 1348 is your station id, weather-KBGR is whatever you want to see on
+StatHat, and 4,14,... is chosen because I see lots of updates on ??:53 from
+KBGR. YMMV.
 
 If you don't run it every 10 minutes, set -interval to match the time between
 runs.
