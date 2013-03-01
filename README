@@ -1,0 +1,42 @@
+What
+
+When I check the temperature outside, I get a number with no context. What
+I need is how cold it is compared to another time I went outside recently.
+I probably remember when that was, but I never remember what the temperature
+was. A graph fixes that, and this command uses OWM[1] and StatHat[2] to make
+that graph.
+
+[1] OWM: http://openweathermap.org/
+[2] StatHat: http://www.stathat.com/
+
+Usage
+
+Obviously, sign up with StatHat :)
+
+Go to http://openweathermap.org/wiki/API/JSON_API and figure out how to find
+the OWM ID (and maybe name) for the station you're interested in. Future
+versions may automate this.
+
+Then run from cron or such something like:
+
+4,14,24,34,44,54 * * * * "$HOME"/bin/weather -email "your@email" -station 1348 -stat weather-KBGR
+
+If you don't run it every 10 minutes, set -interval to match the time between
+runs.
+
+Future
+
+Finding a weather station ID requires manual work. I have most of the code to
+automate it if you have lat,lon for your location, but don't have it merged
+in and hooked up to CLI arguments.
+
+There are actually English speaking people who don't use Fahrenheit (really!)
+so Celsius should be supported.
+
+The StatHat library[1] can do verbose reporting but it's a little too verbose
+so maybe we need verbosity levels.
+
+[1] StatHat library: http://github.com/stathat/go
+
+The StatHat library reports errors via log.Printf which is unGoish(tm) because
+it's inflexible. I should fix it and then update this to match.
