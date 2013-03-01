@@ -1,0 +1,39 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/url"
+	"strconv"
+	"time"
+)
+
+func printIndented(j []byte) error {
+	indented := new(bytes.Buffer)
+	err := json.Indent(indented, j, "", "  ")
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", indented)
+	return nil
+}
+
+func unixString(t time.Time) string {
+	return strconv.FormatInt(t.Unix(), 10)
+}
+
+func wishThisWorked() {
+	interval := 10
+	id := "1348"
+	// passing start and end don't work as expected for tick
+	end := time.Now()
+	start := end.Add(time.Minute * -time.Duration(interval))
+	v := url.Values{}
+	v.Set("start", unixString(start))
+	v.Set("end", unixString(end))
+	v.Set("type", "tick")
+	base := "http://api.openweathermap.org/data/2.1/history/station"
+	u := fmt.Sprintf("%v/%v?%v", base, id, v.Encode())
+	_ = u
+}
