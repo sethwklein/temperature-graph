@@ -25,14 +25,17 @@ versions may automate this.
 
 Then run it from cron or such with something like:
 
-4,14,24,34,44,54 * * * * "$GOPATH"/bin/temperature-graph -email "your@email" -station 1348 -stat weather-KBGR
+4,14,24,34,44,54 * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1348 -stat weather-KBGR
 
 Where 1348 is your station id, weather-KBGR is whatever you want to see on
-StatHat, and 4,14,... is chosen because I see lots of updates on ??:53 from
-KBGR. YMMV.
+StatHat, 4,14,... is chosen because I see lots of updates on ??:53 from KBGR,
+and /home/you/gopath is your GOPATH because vixie-cron (and maybe others)
+don't set those variables. YMMV.
 
 If you don't run it every 10 minutes, set -interval to match the time between
 runs.
+
+If you haven't configured email, on Gentoo errors will end up in ~/dead.letter.
 
 Future
 
