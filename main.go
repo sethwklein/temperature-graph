@@ -15,7 +15,7 @@ func KelvinToFahr(kelvin float64) float64 {
 }
 
 type TickList struct {
-	List []Tick
+	List []*Tick
 }
 
 type Tick struct {
@@ -50,10 +50,21 @@ func (tick *Tick) init() {
 }
 
 func (list *TickList) init() {
-	// if we use a range clause, it copies the tick
-	for i := 0; i < len(list.List); i++ {
-		list.List[i].init()
+	for _, tick := range list.List {
+		tick.init()
 	}
+}
+
+func (list *TickList) Len() int {
+	return len(list.List)
+}
+
+func (list *TickList) Tick(i int) *Tick {
+	return list.List[i]
+}
+
+func (tick *Tick) Print() {
+	fmt.Printf("% 3.1f %v\n", tick.Fahr, tick.Date)
 }
 
 func (list *TickList) Print() {
@@ -63,7 +74,7 @@ func (list *TickList) Print() {
 	}
 	fmt.Printf("%5v %v\n", "Temp", "Time")
 	for _, tick := range list.List {
-		fmt.Printf("% 3.1f %v\n", tick.Fahr, tick.Date)
+		tick.Print()
 	}
 }
 
