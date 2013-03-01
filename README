@@ -25,9 +25,9 @@ versions may automate this.
 
 Then run it from cron or such with something like:
 
-4,14,24,34,44,54 * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1348 -stat weather-KBGR
+4,14,24,34,44,54 * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1348 -stat temperature-KBGR
 
-Where 1348 is your station id, weather-KBGR is whatever you want to see on
+Where 1348 is your station id, temperature-KBGR is whatever you want to see on
 StatHat, 4,14,... is chosen because I see lots of updates on ??:53 from KBGR,
 and /home/you/gopath is your GOPATH because vixie-cron (and maybe others)
 don't set those variables. YMMV.

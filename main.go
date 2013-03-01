@@ -138,7 +138,6 @@ func errMain() (err error) {
 		return nil
 	}
 
-	name = "weather-temp" + name
 	if verbose {
 		fmt.Println(name, email, recent.Fahr)
 	}
