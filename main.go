@@ -105,6 +105,7 @@ func errMain() (err error) {
 		"time since last run")
 	flag.Parse()
 	if help {
+		// BUG(sk): only for this invocation, print to stdout
 		flag.Usage()
 		return nil
 	}
