@@ -100,9 +100,9 @@ func errMain() (err error) {
 	name := ""
 	flag.StringVar(&name, "stat", "",
 		`stat name. defaults to "weather-" + station. ex: weather-temp-KBGR`)
-	interval := time.Minute * 10
-	flag.DurationVar(&interval, "interval", time.Minute*10,
-		"time since last run")
+	var interval time.Duration
+	flag.DurationVar(&interval, "interval", 0,
+		"time since last run if you only want changes reported")
 	flag.Parse()
 	if help {
 		// BUG(sk): only for this invocation, print to stdout
@@ -119,8 +119,6 @@ func errMain() (err error) {
 		name = "weather-" + id
 	}
 
-	prev := time.Now().Add(-interval)
-
 	list, err := NewTickList(id)
 	if err != nil {
 		return err
@@ -134,11 +132,14 @@ func errMain() (err error) {
 		return fmt.Errorf("list too long: %v", list.Len())
 	}
 	recent := list.Tick(0)
-	if recent.Date.Before(prev) {
-		if verbose {
-			fmt.Println("already reported latest data")
+
+	if interval != 0 {
+		if recent.Date.Before(time.Now().Add(-interval)) {
+			if verbose {
+				fmt.Println("already reported latest data")
+			}
+			return nil
 		}
-		return nil
 	}
 
 	if verbose {
