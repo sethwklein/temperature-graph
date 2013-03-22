@@ -35,18 +35,18 @@ func NewTickList(stationID string) (list *TickList, err error) {
 		stationID + "?type=tick"
 	resp, err := http.Get(url)
 	if err != nil {
-		return
+		return nil, err
 	}
 	buf, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return
+		return nil, err
 	}
 	err = json.Unmarshal(buf, &list)
 	if err != nil {
-		return
+		return nil, err
 	}
 	list.init()
-	return
+	return list, nil
 }
 
 func (tick *Tick) init() {
