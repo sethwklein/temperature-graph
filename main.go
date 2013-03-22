@@ -32,7 +32,7 @@ type Tick struct {
 
 func NewTickList(stationID string) (list *TickList, err error) {
 	url := "http://api.openweathermap.org/data/2.1/history/station/" +
-		stationID + "?type=tick"
+		stationID + "?type=tick&cnt=1"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -129,8 +129,10 @@ func errMain() (err error) {
 		return fmt.Errorf("no weather data returned: %v: %v", list.Code,
 			list.Message)
 	}
-
-	recent := list.Tick(list.Len() - 1)
+	if list.Len() > 1 {
+		return fmt.Errorf("list too long: %v", list.Len())
+	}
+	recent := list.Tick(0)
 	if recent.Date.Before(prev) {
 		if verbose {
 			fmt.Println("already reported latest data")
