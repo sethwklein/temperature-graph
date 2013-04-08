@@ -1,6 +1,6 @@
 What
 
-When I check the temperature outside, I get a number with no context. What
+When I check the temperature outside, I get a number without context. What
 I need is how cold it is compared to another time I went outside recently.
 I probably remember when that was, but I never remember what the temperature
 was. A graph fixes that, and this command uses OWM[1] and StatHat[2] to make
@@ -19,15 +19,19 @@ Usage
 
 Obviously, sign up with StatHat :)
 
-Go to http://openweathermap.org/wiki/API/JSON_API and figure out how to find
-the OWM ID (and maybe name) for the station you're interested in. Future
-versions may automate this.
+For now, find the OWM ID of the station you want by hand like this:
+Use something like http://universimmedia.pagesperso-orange.fr/geo/loc.htm
+to find your latitude and longitude and put that into something like
+http://api.openweathermap.org/data/2.1/find/station?lat=43.7&lon=-70.3 .
+The first "id" field is the OWM ID of the station you probably want. If that
+doesn't work, you may be able to figure something out using information from
+http://openweathermap.org/wiki/API/JSON_API
 
-Then run it from cron or such with something like:
+Then run temperature-graph from cron or such with something like:
 
-* * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1348 -stat temperature-KBGR
+* * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1363 -stat temperature-KPWM
 
-Where 1348 is your station id, temperature-KBGR is whatever you want to see
+Where 1363 is your station id, temperature-KPWM is whatever you want to see
 on StatHat, and /home/you/gopath is your GOPATH because vixie-cron (and maybe
 others) don't set those variables. YMMV.
 
