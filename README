@@ -29,11 +29,12 @@ http://openweathermap.org/wiki/API/JSON_API
 
 Then run temperature-graph from cron or such with something like:
 
-* * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1363 -stat temperature-KPWM
+* * * * * /home/you/gopath/bin/temperature-graph -email "your@email" -station 1363 -stat temperature-KPWM >>/home/you/temperature-KPWM.log 2>&1
 
 Where 1363 is your station id, temperature-KPWM is whatever you want to see
-on StatHat, and /home/you/gopath is your GOPATH because vixie-cron (and maybe
-others) don't set those variables. YMMV.
+on StatHat, /home/you/gopath is your GOPATH because vixie-cron (and maybe
+others) don't set those variables, and the log file is so cron doesn't spam
+your email once a minute as long as either StatHat or OWM is down. YMMV.
 
 If you don't want a stat reported unless it's changed, set -interval to match
 the time between runs.
